@@ -2,9 +2,10 @@ import discord
 
 from discord.ext.commands import Cog, command, Context
 
+from utils.impersonate_webhook import ImpersonateWebhook
+
 
 class Pinboard(Cog):
-
     def __init__(self, bot):
         self.bot = bot
         self.pinboard_channel = bot.config.PINBOARD_CHANNEL
@@ -15,37 +16,11 @@ class Pinboard(Cog):
             return
 
         message = reaction.message
-        if self.pinboard_channel:
-            channel = self.bot.get_channel(self.pinboard_channel)
-            if not channel:
-                print(f"error getting channel <{self.pinboard_channel}>")
-                pass
+        webhook = ImpersonateWebhook(
+            self.bot, channel_id=self.pinboard_channel, name="pinboard-hook"
+        )
 
-            # Retrieve or create the appropriate webhook
-            guild_webhooks: list[discord.Webhook] = await channel.webhooks()
-            webhooks_filtered: list[discord.Webhook] = [w for w in guild_webhooks if
-                                                        str(channel.id) in w.name]
-            if not webhooks_filtered:
-                webhook: discord.Webhook = await channel.create_webhook(name=f'pinboard-hook-{channel.id}')
-            else:
-                webhook: discord.Webhook = webhooks_filtered[0]
-
-            # todo: refactor this and test with multiple accounts and message types
-            # Prepare content and attachments
-            files = [await attachment.to_file() for attachment in message.attachments]
-            content = message.content if message.content else None  # Ensure content isn't empty
-
-            payload = {
-                "content": content if files else message.content,
-                "username": message.author.display_name,
-                "avatar_url": message.author.display_avatar.url if message.author.display_avatar else None,
-            }
-
-            # None, is not allowed in files, so we have to add it manually
-            if files:
-                payload["files"] = files
-
-            await webhook.send(**payload)
+        await webhook.impersonate_message(message)
 
     @command()
     async def pinboard(self, ctx: Context, channel: discord.TextChannel):
