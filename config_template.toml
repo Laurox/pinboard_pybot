@@ -1,0 +1,5 @@
+prefix = "!"
+description = "lorem ipsum"
+owner_id = 123
+[api_tokens]
+discord = "BOT_API_KEY"
