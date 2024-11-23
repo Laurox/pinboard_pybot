@@ -3,8 +3,6 @@
 A simple Discord bot that allows you to react to messages with a 📌 `:pushpin:` emoji and sends the pinned message to a
 pre-configured channel using an impersonation webhook.
 
----
-
 ## Requirements
 
 - **Python**: 3.12 or later
@@ -13,8 +11,6 @@ pre-configured channel using an impersonation webhook.
 ```bash
 pip install -r requirements.txt
 ```
-
----
 
 ## Usage
 
@@ -41,8 +37,6 @@ Start the bot using the following command. If no config file path is provided, t
 python bot.py [config-file]
 ```
 
----
-
 ## Development
 
 ### Code Formatting
@@ -59,8 +53,6 @@ To check for issues, run:
 ```bash
 ruff check .
 ```
-
----
 
 ## License
 
