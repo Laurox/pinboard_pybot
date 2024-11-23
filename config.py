@@ -2,7 +2,6 @@ import toml
 
 
 class Config:
-
     PINBOARD_CHANNEL = 1309661580924944526
 
     def __init__(self, config_file: str):

@@ -6,7 +6,7 @@ from discord.ext.commands import Bot as BotBase
 
 from config import Config
 
-COGS = [path[:-3] for path in os.listdir('./cogs') if path[-3:] == '.py']
+COGS = [path[:-3] for path in os.listdir("./cogs") if path[-3:] == ".py"]
 
 
 class Bot(BotBase):
@@ -22,13 +22,13 @@ class Bot(BotBase):
             owner_id=self.config.owner_id,
             intents=Intents.all(),
             description=self.config.description,
-            case_insensitive=True
+            case_insensitive=True,
         )
 
     async def setup_hook(self):
         for cog in COGS:
-            await self.load_extension(f'cogs.{cog}')
-            print(f'loaded: {cog}')
+            await self.load_extension(f"cogs.{cog}")
+            print(f"loaded: {cog}")
         print("all cogs loaded, setup complete")
 
     def run(self, **kwargs):
