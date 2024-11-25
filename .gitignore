@@ -159,4 +159,4 @@ cython_debug/
 
 # pinboard pybot
 config.toml
-data/da/database.sqlite3
+data/db/database.sqlite3
