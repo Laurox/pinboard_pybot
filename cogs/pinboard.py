@@ -52,17 +52,14 @@ class Pinboard(Cog):
     def _set_pinboard_channel(guild_id: int, channel_id: int):
         db.execute(
             "REPLACE INTO config(guild_id, config_key, config_value) VALUES (?, ?, ?)",
-            guild_id,
-            "pinboard_channel",
-            channel_id,
+            guild_id, "pinboard_channel", channel_id,
         )
 
     @staticmethod
     def _get_pinboard_channel(guild_id: int):
         result = db.fetchone(
             "SELECT config_value FROM config WHERE guild_id = ? AND config_key = ?",
-            guild_id,
-            "pinboard_channel",
+            guild_id, "pinboard_channel",
         )
         
         return int(result[0]) if result else None
