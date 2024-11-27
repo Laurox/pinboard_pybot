@@ -11,16 +11,31 @@ class Pinboard(Cog):
         self.bot = bot
 
     @Cog.listener()
-    async def on_reaction_add(self, reaction, user):
-        if reaction.emoji != "📌" or user.bot:
+    async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
+        if  payload.emoji.name != "📌":
             return
+
+        guild_id = payload.guild_id
+        channel_id = payload.channel_id
+        message_id = payload.message_id
+        user_id = payload.user_id
+
+
+        if db.fetchone("SELECT 1 FROM pin_log WHERE message_id = ?",message_id):
+            return
+
+        db.execute(
+            "INSERT INTO pin_log(guild_id, channel_id, message_id, user_id) VALUES (?, ?, ?, ?)",
+            guild_id, channel_id, message_id, user_id
+        )
 
         # check if there is a pinboard configured for the current guild
-        pinboard_channel_id = self._get_pinboard_channel(reaction.message.guild.id)
+        pinboard_channel_id = self._get_pinboard_channel(guild_id)
         if not pinboard_channel_id:
             return
-
-        message = reaction.message
+        
+        current_channel = self.bot.get_channel(channel_id) or await self.bot.fetch_channel(channel_id)
+        message = await current_channel.fetch_message(message_id)
         webhook = ImpersonateWebhook(
             self.bot, channel_id=pinboard_channel_id, name="pinboard-hook"
         )
